@@ -12,4 +12,9 @@ class KategoriKelas extends Model
     protected $table = 'kategori_kelas';
 
     protected $fillable = ['nama_kategori'];
+
+     public function kelas()
+    {
+        return $this->hasMany(Kelas::class, 'kategoriKelas_id');
+    }
 }
