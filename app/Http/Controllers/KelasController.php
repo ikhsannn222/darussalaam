@@ -1,46 +1,42 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Kelas;
 use App\Models\KategoriKelas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KelasController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
-{
-    $kelas = Kelas::with('kategori')->get(); // Ambil semua data kelas dengan relasi kategori
-    $kategori = KategoriKelas::all();        // Ambil semua kategori untuk dropdown/form
+    {
+        // Ambil data kelas sekaligus relasi kategori
+        $kelas = Kelas::with('kategori')->get();
 
-    return view('kelas.index', compact('kelas', 'kategori'));
-}
+        // Ambil data kategori untuk dropdown di modal create/edit
+        $kategori = KategoriKelas::all();
 
-    /**
-     * Show the form for creating a new resource.
-     */
+        return view('kelas.index', compact('kelas', 'kategori'));
+    }
+
     public function create()
     {
-        $kategori = KategoriKelas::all();
+        $kategori = DB::table('kategori_kelas')->get();
         return view('kelas.create', compact('kategori'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'nama_kelas'        => 'required|string|max:255',
-            'kategoriKelas_id'  => 'required|exists:kategori_kelas,id',
+            'nama_kelas'       => 'required|string|max:255',
+            'kategoriKelas_id' => 'required|exists:kategori_kelas,id',
         ]);
 
-        Kelas::create([
+        DB::table('kelas')->insert([
             'nama_kelas'       => $request->nama_kelas,
             'kategoriKelas_id' => $request->kategoriKelas_id,
+            'created_at'       => now(),
+            'updated_at'       => now(),
         ]);
 
         return redirect()->route('kelas.index')->with('sweetalert', [
@@ -52,56 +48,54 @@ class KelasController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        $kelas = Kelas::with('kategori')->findOrFail($id);
+        $kelas = DB::table('kelas')
+            ->join('kategori_kelas', 'kelas.kategoriKelas_id', '=', 'kategori_kelas.id')
+            ->select('kelas.*', 'kategori_kelas.nama_kategori as nama_kategori')
+            ->where('kelas.id', $id)
+            ->first();
+
+        if (! $kelas) {
+            abort(404);
+        }
+
         return view('kelas.show', compact('kelas'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        $kelas = Kelas::findOrFail($id);
-        $kategori = KategoriKelas::all();
+        $kelas = DB::table('kelas')->where('id', $id)->first();
+        if (! $kelas) {
+            abort(404);
+        }
+
+        $kategori = DB::table('kategori_kelas')->get();
         return view('kelas.edit', compact('kelas', 'kategori'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_kelas'        => 'required|string|max:255',
-            'kategoriKelas_id'  => 'required|exists:kategori_kelas,id',
+            'nama_kelas'       => 'required|string|max:255',
+            'kategoriKelas_id' => 'required|exists:kategori_kelas,id',
         ]);
 
-        $kelas = Kelas::findOrFail($id);
+        $kelas                   = Kelas::findOrFail($id);
         $kelas->nama_kelas       = $request->nama_kelas;
         $kelas->kategoriKelas_id = $request->kategoriKelas_id;
         $kelas->save();
 
-        return redirect()->route('kelas.index')->with('sweetalert', [
-            'title'             => 'Kelas berhasil diperbarui!',
-            'icon'              => 'success',
-            'position'          => 'top-end',
-            'showConfirmButton' => false,
-            'timer'             => 1500,
-        ]);
+        return redirect()->route('kelas.index')->with('success', 'Kelas berhasil diupdate.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        $kelas = Kelas::findOrFail($id);
-        $kelas->delete();
+        $deleted = DB::table('kelas')->where('id', $id)->delete();
+
+        if (! $deleted) {
+            abort(404);
+        }
 
         return redirect()->back()->with('sweetalert', [
             'title'             => 'Berhasil!',

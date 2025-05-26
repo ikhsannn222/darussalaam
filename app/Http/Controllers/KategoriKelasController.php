@@ -1,39 +1,33 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\KategoriKelas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KategoriKelasController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $kategori = KategoriKelas::all();
+        $kategori = DB::table('kategori_kelas')->get();
         return view('kategori_kelas.index', compact('kategori'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('kategori_kelas.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
             'nama_kategori' => 'required|string|max:255',
         ]);
 
-        KategoriKelas::create([
+        DB::table('kategori_kelas')->insert([
             'nama_kategori' => $request->nama_kategori,
+            'created_at'    => now(),
+            'updated_at'    => now(),
         ]);
 
         return redirect()->route('kategori_kelas.index')->with('sweetalert', [
@@ -45,33 +39,38 @@ class KategoriKelasController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        $kategori = KategoriKelas::findOrFail($id);
+        $kategori = DB::table('kategori_kelas')->where('id', $id)->first();
+        abort_unless($kategori, 404);
+
         return view('kategori_kelas.show', compact('kategori'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        $kategori = KategoriKelas::findOrFail($id);
+        $kategori = DB::table('kategori_kelas')->where('id', $id)->first();
+        abort_unless($kategori, 404);
+
         return view('kategori_kelas.edit', compact('kategori'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $request->validate([
             'nama_kategori' => 'required|string|max:255',
         ]);
 
-        $kategori                = KategoriKelas::findOrFail($id);
-        $kategori->nama_kategori = $request->nama_kategori;
-        $kategori->save();
+        $affected = DB::table('kategori_kelas')
+            ->where('id', $id)
+            ->update([
+                'nama_kategori' => $request->nama_kategori,
+                'updated_at'    => now(),
+            ]);
+
+        if (!$affected) {
+            abort(404);
+        }
 
         return redirect()->route('kategori_kelas.index')->with('sweetalert', [
             'title'             => 'Kategori Kelas berhasil diperbarui!',
@@ -82,13 +81,13 @@ class KategoriKelasController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        $kategori = KategoriKelas::findOrFail($id);
-        $kategori->delete();
+        $deleted = DB::table('kategori_kelas')->where('id', $id)->delete();
+
+        if (!$deleted) {
+            abort(404);
+        }
 
         return redirect()->back()->with('sweetalert', [
             'title'             => 'Berhasil!',
@@ -98,5 +97,4 @@ class KategoriKelasController extends Controller
             'showConfirmButton' => false,
         ]);
     }
-
 }
