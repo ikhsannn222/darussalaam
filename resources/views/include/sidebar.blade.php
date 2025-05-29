@@ -38,6 +38,9 @@
                         <span>Kelas</span>
                     </a>
                 </li>
+
+                  <!-- Organisasi Section Title -->
+                <li class="nav-section">Organisasi</li>
             </ul>
         </div>
     </div>
