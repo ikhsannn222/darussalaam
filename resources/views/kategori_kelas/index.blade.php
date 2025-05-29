@@ -9,7 +9,7 @@
                 <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
                     <h5 class="mb-0">Daftar Kategori Kelas</h5>
                     <a href="#" class="btn btn-primary btn-round" data-bs-toggle="modal" data-bs-target="#createModal">
-                        <i class="fas fa-plus me-1"></i> Kelas
+                        <i class="fas fa-plus me-1"></i> Kategori
                     </a>
                 </div>
 
