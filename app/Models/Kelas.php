@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -13,8 +14,9 @@ class Kelas extends Model
     protected $fillable = [
         'nama_kelas',
         'kategoriKelas_id',
+        'image',
     ];
-    
+
     public function kategori()
     {
         return $this->belongsTo(KategoriKelas::class, 'kategoriKelas_id');

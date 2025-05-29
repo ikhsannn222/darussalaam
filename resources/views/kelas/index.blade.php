@@ -1,152 +1,246 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-4">
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
+    <div class="container py-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
 
-            {{-- Header dan tombol tambah --}}
-            <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
-                <h5 class="mb-0">Daftar Kelas</h5>
-                <a href="#" class="btn btn-primary btn-round" data-bs-toggle="modal" data-bs-target="#createModal">
-                    <i class="fas fa-plus me-1"></i> Kelas
-                </a>
-            </div>
+                {{-- Header dan tombol tambah --}}
+                <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                    <h5 class="mb-0">Daftar Kelas</h5>
+                    <a href="#" class="btn btn-primary btn-round" data-bs-toggle="modal" data-bs-target="#createModal">
+                        <i class="fas fa-plus me-1"></i> Kelas
+                    </a>
+                </div>
 
-            {{-- Tabel --}}
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Nama Kelas</th>
-                            <th scope="col">Kategori</th>
-                            <th scope="col">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($kelas as $item)
+                {{-- Tabel --}}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $item->nama_kelas }}</td>
-                                <td>{{ $item->kategori->nama_kategori ?? '-' }}</td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
-                                            id="dropdownMenuButton{{ $item->id }}" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $item->id }}">
-                                            <li>
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                    data-bs-target="#showModal-{{ $item->id }}">
-                                                    <i class="fas fa-eye me-1"></i> Lihat
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal-{{ $item->id }}">
-                                                    <i class="fas fa-edit me-1"></i> Edit
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <button class="dropdown-item text-danger"
-                                                    onclick="confirmDelete({{ $item->id }})">
-                                                    <i class="fas fa-trash-alt me-1"></i> Hapus
-                                                </button>
-                                                <form id="delete-form-{{ $item->id }}"
-                                                    action="{{ route('kelas.destroy', $item->id) }}" method="POST"
-                                                    class="d-none">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
+                                <th scope="col">No</th>
+                                <th scope="col">Nama Kelas</th>
+                                <th scope="col">Kategori</th>
+                                <th scope="col">Aksi</th>
                             </tr>
-
-                            {{-- Modal Show --}}
-                            <div class="modal fade" id="showModal-{{ $item->id }}" tabindex="-1"
-                                aria-labelledby="showModalLabel{{ $item->id }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Detail Kelas</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
+                        </thead>
+                        <tbody>
+                            @foreach ($kelas as $item)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $item->nama_kelas }}</td>
+                                    <td>{{ $item->kategori->nama_kategori ?? '-' }}</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
+                                                id="dropdownMenuButton{{ $item->id }}" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                            <ul class="dropdown-menu"
+                                                aria-labelledby="dropdownMenuButton{{ $item->id }}">
+                                                <li>
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                        data-bs-target="#showModal-{{ $item->id }}">
+                                                        <i class="fas fa-eye me-1"></i> Lihat
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                        data-bs-target="#editModal-{{ $item->id }}">
+                                                        <i class="fas fa-edit me-1"></i> Edit
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <button class="dropdown-item text-danger"
+                                                        onclick="confirmDelete({{ $item->id }})">
+                                                        <i class="fas fa-trash-alt me-1"></i> Hapus
+                                                    </button>
+                                                    <form id="delete-form-{{ $item->id }}"
+                                                        action="{{ route('kelas.destroy', $item->id) }}" method="POST"
+                                                        class="d-none">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                </li>
+                                            </ul>
                                         </div>
-                                        <div class="modal-body">
-                                            <p><strong>Nama Kelas:</strong> {{ $item->nama_kelas }}</p>
-                                            <p><strong>Kategori:</strong> {{ $item->kategori->nama_kategori ?? '-' }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                    </td>
+                                </tr>
 
-                            {{-- Modal Edit --}}
-                            <div class="modal fade" id="editModal-{{ $item->id }}" tabindex="-1"
-                                aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <form action="{{ route('kelas.update', $item->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
+                                {{-- Modal Show --}}
+                                <div class="modal fade" id="showModal-{{ $item->id }}" tabindex="-1"
+                                    aria-labelledby="showModalLabel{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
+
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Edit Kelas</h5>
+                                                <h5 class="modal-title" id="showModalLabel{{ $item->id }}">Detail Kelas
+                                                </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
+
                                             <div class="modal-body">
-                                                <div class="mb-3">
-                                                    <label for="nama_kelas_{{ $item->id }}" class="form-label">Nama Kelas</label>
-                                                    <input type="text" class="form-control" name="nama_kelas"
-                                                        id="nama_kelas_{{ $item->id }}" value="{{ $item->nama_kelas }}" required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="kategoriKelas_id_{{ $item->id }}" class="form-label">Kategori</label>
-                                                    <select name="kategoriKelas_id" id="kategoriKelas_id_{{ $item->id }}"
-                                                        class="form-select" required>
-                                                        @foreach ($kategori as $kat)
-                                                            <option value="{{ $kat->id }}"
-                                                                {{ $item->kategoriKelas_id == $kat->id ? 'selected' : '' }}>
-                                                                {{ $kat->nama_kategori }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
+                                                <p><strong>Nama Kelas:</strong> {{ $item->nama_kelas }}</p>
+                                                <p><strong>Kategori:</strong> {{ $item->kategori->nama_kategori ?? '-' }}
+                                                </p>
+
+                                                <div class="d-flex align-items-start mb-3">
+                                                    <strong class="me-2">Gambar:</strong>
+                                                    @if ($item->image && file_exists(public_path('storage/' . $item->image)))
+                                                        <img src="{{ asset('storage/' . $item->image) }}"
+                                                            alt="Gambar Kelas" class="rounded shadow-sm"
+                                                            style="max-height: 200px; cursor: pointer;"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#imageModal-{{ $item->id }}">
+                                                    @else
+                                                        <span class="text-muted"><em>Tidak ada gambar tersedia.</em></span>
+                                                    @endif
                                                 </div>
                                             </div>
+
                                             <div class="modal-footer">
-                                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Tutup</button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Modal Gambar Besar --}}
+                                @if ($item->image && file_exists(public_path('storage/' . $item->image)))
+                                    <div class="modal fade" id="imageModal-{{ $item->id }}" tabindex="-1"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                            <div class="modal-content bg-transparent border-0">
+                                                <div class="modal-body text-center">
+                                                    <img src="{{ asset('storage/' . $item->image) }}"
+                                                        alt="Gambar Kelas Besar" class="img-fluid rounded shadow">
+                                                </div>
+                                                <div class="modal-footer justify-content-center">
+                                                    <button type="button" class="btn btn-light"
+                                                        data-bs-dismiss="modal">Tutup</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </form>
-                                </div>
-                            </div>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                                    </div>
+                                @endif
 
+                                {{-- Modal Edit --}}
+                                <div class="modal fade" id="editModal-{{ $item->id }}" tabindex="-1"
+                                    aria-labelledby="editModalLabel-{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <form action="{{ route('kelas.update', $item->id) }}" method="POST"
+                                            enctype="multipart/form-data">
+                                            @csrf
+                                            @method('PUT')
+
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editModalLabel-{{ $item->id }}">Edit
+                                                        Kelas</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <!-- Nama Kelas -->
+                                                    <div class="mb-3">
+                                                        <label for="nama_kelas_{{ $item->id }}"
+                                                            class="form-label">Nama Kelas</label>
+                                                        <div class="input-group input-group-lg">
+                                                            <span
+                                                                class="input-group-text bg-white border-end-0 rounded-start">
+                                                                <i class="fas fa-book-open"></i>
+                                                            </span>
+                                                            <input type="text"
+                                                                class="form-control border-start-0 rounded-end"
+                                                                placeholder="Masukkan nama kelas" name="nama_kelas"
+                                                                id="nama_kelas_{{ $item->id }}"
+                                                                value="{{ $item->nama_kelas }}" required>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Kategori Kelas -->
+                                                    <div class="mb-3">
+                                                        <label for="kategoriKelas_id_{{ $item->id }}"
+                                                            class="form-label">Kategori</label>
+                                                        <div class="input-group input-group-lg">
+                                                            <span
+                                                                class="input-group-text bg-white border-end-0 rounded-start">
+                                                                <i class="fas fa-tags"></i>
+                                                            </span>
+                                                            <select name="kategoriKelas_id"
+                                                                id="kategoriKelas_id_{{ $item->id }}"
+                                                                class="form-select border-start-0 rounded-end" required>
+                                                                <option value="" disabled>-- Pilih Kategori --
+                                                                </option>
+                                                                @foreach ($kategori as $kat)
+                                                                    <option value="{{ $kat->id }}"
+                                                                        {{ $item->kategoriKelas_id == $kat->id ? 'selected' : '' }}>
+                                                                        {{ $kat->nama_kategori }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Upload Gambar -->
+                                                    <div class="mb-3">
+                                                        <label for="image_{{ $item->id }}" class="form-label">Gambar
+                                                            Kelas</label>
+                                                        <input class="form-control" type="file" name="image"
+                                                            id="image_{{ $item->id }}" accept="image/*">
+                                                        @if ($item->image && file_exists(public_path('storage/' . $item->image)))
+                                                            <div class="mt-2">
+                                                                <small class="text-muted">Gambar saat ini:</small><br>
+                                                                <img src="{{ asset('storage/' . $item->image) }}"
+                                                                    alt="Preview Gambar" style="max-height: 150px;"
+                                                                    class="rounded shadow-sm mt-1">
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary btn-round"
+                                                        data-bs-dismiss="modal">
+                                                        <i class="fas fa-times me-1"></i> Batal
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary btn-round">
+                                                        <i class="fas fa-save me-1"></i> Update
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
         </div>
     </div>
-</div>
 
-{{-- Modal Tambah --}}
-@include('kelas.create', ['kategori' => $kategori])
+    {{-- Modal Tambah --}}
+    @include('kelas.create', ['kategori' => $kategori])
 
-@if (session('sweetalert'))
-    <script>
-        Swal.fire({
-            title: {!! json_encode(session('sweetalert.title')) !!},
-            icon: {!! json_encode(session('sweetalert.icon')) !!},
-            position: {!! json_encode(session('sweetalert.position') ?? 'center') !!},
-            showConfirmButton: {{ session('sweetalert.showConfirmButton') ? 'true' : 'false' }},
-            timer: {{ session('sweetalert.timer') ?? 1500 }}
-        });
-    </script>
-@endif
+    @if (session('sweetalert'))
+        <script>
+            Swal.fire({
+                title: {!! json_encode(session('sweetalert.title')) !!},
+                icon: {!! json_encode(session('sweetalert.icon')) !!},
+                position: {!! json_encode(session('sweetalert.position') ?? 'center') !!},
+                showConfirmButton: {{ session('sweetalert.showConfirmButton') ? 'true' : 'false' }},
+                timer: {{ session('sweetalert.timer') ?? 1500 }}
+            });
+        </script>
+    @endif
 @endsection
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

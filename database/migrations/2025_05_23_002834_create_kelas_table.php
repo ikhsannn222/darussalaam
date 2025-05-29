@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_kelas');
             $table->unsignedBigInteger('kategoriKelas_id');
+            $table->string('image');
             $table->timestamps();
         });
     }
