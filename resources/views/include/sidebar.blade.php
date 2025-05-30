@@ -41,6 +41,12 @@
 
                   <!-- Organisasi Section Title -->
                 <li class="nav-section">Organisasi</li>
+                <li class="nav-item {{ request()->routeIs('guru.*') ? 'active' : '' }}">
+                    <a href="{{ route('guru.index') }}">
+                        <i class="fas fa-school"></i>
+                        <span>Guru</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

@@ -21,4 +21,9 @@ class Kelas extends Model
     {
         return $this->belongsTo(KategoriKelas::class, 'kategoriKelas_id');
     }
+
+    public function guru()
+    {
+        return $this->hasMany(Guru::class, 'kelas');
+    }
 }

@@ -17,4 +17,9 @@ class KategoriKelas extends Model
     {
         return $this->hasMany(Kelas::class, 'kategoriKelas_id');
     }
+
+     public function guru()
+    {
+        return $this->hasMany(Guru::class, 'kategoriKelas_id');
+    }
 }
