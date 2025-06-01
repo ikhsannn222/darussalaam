@@ -11,15 +11,16 @@
                 <div class="modal-body">
                     <!-- Nama Kelas -->
                     <div class="mb-3">
-                        <label for="nama_kelas" class="form-label">Nama Kelas</label>
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-text bg-white border-end-0 rounded-start">
-                                <i class="fas fa-book-open"></i>
+                        <label for="nama_kelas" class="form-label fw-semibold">Nama Kelas</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white">
+                                <i class="fas fa-chalkboard"></i>
                             </span>
-                            <input type="text" class="form-control border-start-0 rounded-end"
-                                placeholder="Masukkan nama kelas" name="nama_kelas" id="nama_kelas" required>
+                            <input type="text" class="form-control" name="nama_kelas" id="nama_kelas"
+                                placeholder="Masukkan nama kelas" required>
                         </div>
                     </div>
+
 
                     <!-- Kategori Kelas -->
                     <div class="mb-3">

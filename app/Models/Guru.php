@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -35,4 +34,10 @@ class Guru extends Model
     {
         return $this->belongsTo(Kelas::class, 'kelas_id');
     }
+
+    public function guruKelas()
+    {
+        return $this->hasMany(GuruKelas::class);
+    }
+
 }

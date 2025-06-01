@@ -5,7 +5,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold mb-0">Daftar Guru</h4>
             <button class="btn btn-primary rounded-pill shadow" data-bs-toggle="modal" data-bs-target="#createModal">
-                <i class="fas fa-plus me-1"></i> Tambah Guru
+                <i class="fas fa-plus me-1"></i>Guru
             </button>
         </div>
 
@@ -35,25 +35,30 @@
                                     <td>{{ $item->kelas->nama_kelas ?? '-' }}</td>
                                     <td class="text-end">
                                         <div class="dropdown">
-                                            <button class="btn btn-sm btn-light shadow-sm border" type="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
+                                                id="dropdownMenuButton{{ $item->id }}" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item" data-bs-toggle="modal"
+                                            <ul class="dropdown-menu"
+                                                aria-labelledby="dropdownMenuButton{{ $item->id }}">
+                                                <li>
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                         data-bs-target="#showModal-{{ $item->id }}">
-                                                        <i class="fas fa-eye me-1 text-info"></i> Lihat
-                                                    </a></li>
-                                                <li><a class="dropdown-item" data-bs-toggle="modal"
+                                                        <i class="fas fa-eye me-1"></i> Lihat
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                         data-bs-target="#editModal-{{ $item->id }}">
-                                                        <i class="fas fa-edit me-1 text-warning"></i> Edit
-                                                    </a></li>
+                                                        <i class="fas fa-edit me-1"></i> Edit
+                                                    </a>
+                                                </li>
                                                 <li>
                                                     <button class="dropdown-item text-danger"
-                                                        onclick="confirmDelete('delete-form-{{ $item->id }}')">
+                                                        onclick="confirmDelete({{ $item->id }})">
                                                         <i class="fas fa-trash-alt me-1"></i> Hapus
                                                     </button>
-
                                                     <form id="delete-form-{{ $item->id }}"
                                                         action="{{ route('guru.destroy', $item->id) }}" method="POST"
                                                         class="d-none">
@@ -61,7 +66,6 @@
                                                         @method('DELETE')
                                                     </form>
                                                 </li>
-
                                             </ul>
                                         </div>
                                     </td>
@@ -70,7 +74,7 @@
                                 {{-- Modal Show --}}
                                 <div class="modal fade" id="showModal-{{ $item->id }}" tabindex="-1"
                                     aria-labelledby="showModalLabel{{ $item->id }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg"> {{-- Tambahkan modal-lg agar lebar --}}
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="showModalLabel{{ $item->id }}">Detail Guru
@@ -79,30 +83,124 @@
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <p><strong>Nama:</strong> {{ $item->nama }}</p>
-                                                <p><strong>NIP:</strong> {{ $item->nip ?? '-' }}</p>
-                                                <p><strong>Email:</strong> {{ $item->email }}</p>
-                                                <p><strong>No HP:</strong> {{ $item->no_hp ?? '-' }}</p>
-                                                <p><strong>Alamat:</strong> {{ $item->alamat ?? '-' }}</p>
-                                                <p><strong>Jenis Kelamin:</strong>
-                                                    {{ $item->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</p>
-                                                <p><strong>Tanggal Lahir:</strong> {{ $item->tanggal_lahir ?? '-' }}</p>
-                                                <p><strong>Tempat Lahir:</strong> {{ $item->tempat_lahir ?? '-' }}</p>
-                                                <p><strong>Kategori Kelas:</strong>
-                                                    {{ $item->kategoriKelas->nama_kategori ?? '-' }}</p>
-                                                <p><strong>Kelas:</strong> {{ $item->kelas->nama_kelas ?? '-' }}</p>
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">Nama</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i
+                                                                    class="fas fa-user"></i></span>
+                                                            <input type="text" class="form-control"
+                                                                value="{{ $item->nama }}" readonly>
+                                                        </div>
+                                                    </div>
 
-                                                <div class="d-flex align-items-start mb-3">
-                                                    <strong class="me-2">Gambar:</strong>
-                                                    @if ($item->image && file_exists(public_path('storage/' . $item->image)))
-                                                        <img src="{{ asset('storage/' . $item->image) }}" alt="Gambar Guru"
-                                                            class="rounded shadow-sm"
-                                                            style="max-height: 200px; cursor: pointer;"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#imageModal-{{ $item->id }}">
-                                                    @else
-                                                        <span class="text-muted"><em>Tidak ada gambar tersedia.</em></span>
-                                                    @endif
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">NIP</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i
+                                                                    class="fas fa-id-card"></i></span>
+                                                            <input type="text" class="form-control"
+                                                                value="{{ $item->nip ?? '-' }}" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">Email</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i
+                                                                    class="fas fa-envelope"></i></span>
+                                                            <input type="email" class="form-control"
+                                                                value="{{ $item->email }}" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">No HP</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i
+                                                                    class="fas fa-phone"></i></span>
+                                                            <input type="text" class="form-control"
+                                                                value="{{ $item->no_hp ?? '-' }}" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <label class="form-label fw-semibold">Alamat</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i
+                                                                    class="fas fa-map-marker-alt"></i></span>
+                                                            <input type="text" class="form-control"
+                                                                value="{{ $item->alamat ?? '-' }}" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">Jenis Kelamin</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i
+                                                                    class="fas fa-venus-mars"></i></span>
+                                                            <input type="text" class="form-control"
+                                                                value="{{ $item->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}"
+                                                                readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">Tanggal Lahir</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i
+                                                                    class="fas fa-calendar"></i></span>
+                                                            <input type="text" class="form-control"
+                                                                value="{{ $item->tanggal_lahir ?? '-' }}" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">Tempat Lahir</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i
+                                                                    class="fas fa-map-pin"></i></span>
+                                                            <input type="text" class="form-control"
+                                                                value="{{ $item->tempat_lahir ?? '-' }}" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">Kategori Kelas</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i
+                                                                    class="fas fa-layer-group"></i></span>
+                                                            <input type="text" class="form-control"
+                                                                value="{{ $item->kategoriKelas->nama_kategori ?? '-' }}"
+                                                                readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">Kelas</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i
+                                                                    class="fas fa-chalkboard"></i></span>
+                                                            <input type="text" class="form-control"
+                                                                value="{{ $item->kelas->nama_kelas ?? '-' }}" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">Gambar</label>
+                                                        <div>
+                                                            @if ($item->image && file_exists(public_path('storage/' . $item->image)))
+                                                                <img src="{{ asset('storage/' . $item->image) }}"
+                                                                    alt="Gambar Guru" class="rounded shadow-sm mt-2"
+                                                                    style="max-height: 200px; cursor: pointer;"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#imageModal-{{ $item->id }}">
+                                                            @else
+                                                                <p class="text-muted mt-2"><em>Tidak ada gambar
+                                                                        tersedia.</em></p>
+                                                            @endif
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -135,145 +233,168 @@
                                 {{-- Modal Edit --}}
                                 <div class="modal fade" id="editModal-{{ $item->id }}" tabindex="-1"
                                     aria-labelledby="editModalLabel-{{ $item->id }}" aria-hidden="true">
-                                    <div class="modal-dialog">
+                                    <div class="modal-dialog modal-lg">
                                         <form action="{{ route('guru.update', $item->id) }}" method="POST"
                                             enctype="multipart/form-data">
                                             @csrf
                                             @method('PUT')
-
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="editModalLabel-{{ $item->id }}">Edit
-                                                        Guru</h5>
+                                                    <h5 class="modal-title">Edit Guru</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
                                                 </div>
-
                                                 <div class="modal-body">
-                                                    {{-- Nama --}}
-                                                    <div class="mb-3">
-                                                        <label for="nama_{{ $item->id }}"
-                                                            class="form-label">Nama</label>
-                                                        <input type="text" class="form-control" name="nama"
-                                                            id="nama_{{ $item->id }}" value="{{ $item->nama }}"
-                                                            required>
-                                                    </div>
-
-                                                    {{-- NIP --}}
-                                                    <div class="mb-3">
-                                                        <label for="nip_{{ $item->id }}"
-                                                            class="form-label">NIP</label>
-                                                        <input type="text" class="form-control" name="nip"
-                                                            id="nip_{{ $item->id }}" value="{{ $item->nip }}">
-                                                    </div>
-
-                                                    {{-- Email --}}
-                                                    <div class="mb-3">
-                                                        <label for="email_{{ $item->id }}"
-                                                            class="form-label">Email</label>
-                                                        <input type="email" class="form-control" name="email"
-                                                            id="email_{{ $item->id }}" value="{{ $item->email }}"
-                                                            required>
-                                                    </div>
-
-                                                    {{-- No HP --}}
-                                                    <div class="mb-3">
-                                                        <label for="no_hp_{{ $item->id }}" class="form-label">No
-                                                            HP</label>
-                                                        <input type="text" class="form-control" name="no_hp"
-                                                            id="no_hp_{{ $item->id }}" value="{{ $item->no_hp }}">
-                                                    </div>
-
-                                                    {{-- Alamat --}}
-                                                    <div class="mb-3">
-                                                        <label for="alamat_{{ $item->id }}"
-                                                            class="form-label">Alamat</label>
-                                                        <textarea class="form-control" name="alamat" id="alamat_{{ $item->id }}">{{ $item->alamat }}</textarea>
-                                                    </div>
-
-                                                    {{-- Jenis Kelamin --}}
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Jenis Kelamin</label>
-                                                        <select name="jenis_kelamin" class="form-select" required>
-                                                            <option value="L"
-                                                                {{ $item->jenis_kelamin == 'L' ? 'selected' : '' }}>
-                                                                Laki-laki</option>
-                                                            <option value="P"
-                                                                {{ $item->jenis_kelamin == 'P' ? 'selected' : '' }}>
-                                                                Perempuan</option>
-                                                        </select>
-                                                    </div>
-
-                                                    {{-- Tanggal Lahir --}}
-                                                    <div class="mb-3">
-                                                        <label for="tanggal_lahir_{{ $item->id }}"
-                                                            class="form-label">Tanggal Lahir</label>
-                                                        <input type="date" class="form-control" name="tanggal_lahir"
-                                                            id="tanggal_lahir_{{ $item->id }}"
-                                                            value="{{ $item->tanggal_lahir }}">
-                                                    </div>
-
-                                                    {{-- Tempat Lahir --}}
-                                                    <div class="mb-3">
-                                                        <label for="tempat_lahir_{{ $item->id }}"
-                                                            class="form-label">Tempat Lahir</label>
-                                                        <input type="text" class="form-control" name="tempat_lahir"
-                                                            id="tempat_lahir_{{ $item->id }}"
-                                                            value="{{ $item->tempat_lahir }}">
-                                                    </div>
-
-                                                    {{-- Kategori Kelas --}}
-                                                    <div class="mb-3">
-                                                        <label for="kategoriKelas_id_{{ $item->id }}"
-                                                            class="form-label">Kategori Kelas</label>
-                                                        <select name="kategoriKelas_id"
-                                                            id="kategoriKelas_id_{{ $item->id }}" class="form-select"
-                                                            required>
-                                                            <option value="" disabled>-- Pilih Kategori --</option>
-                                                            @foreach ($kategori as $kat)
-                                                                <option value="{{ $kat->id }}"
-                                                                    {{ $item->kategoriKelas_id == $kat->id ? 'selected' : '' }}>
-                                                                    {{ $kat->nama_kategori }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    {{-- Kelas --}}
-                                                    <div class="mb-3">
-                                                        <label for="kelas_id_{{ $item->id }}"
-                                                            class="form-label">Kelas</label>
-                                                        <select name="kelas_id" id="kelas_id_{{ $item->id }}"
-                                                            class="form-select" required>
-                                                            <option value="" disabled>-- Pilih Kelas --</option>
-                                                            @foreach ($kelas as $k)
-                                                                <option value="{{ $k->id }}"
-                                                                    {{ $item->kelas_id == $k->id ? 'selected' : '' }}>
-                                                                    {{ $k->nama_kelas }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    {{-- Upload Gambar --}}
-                                                    <div class="mb-3">
-                                                        <label for="image_{{ $item->id }}" class="form-label">Gambar
-                                                            Guru</label>
-                                                        <input class="form-control" type="file" name="image"
-                                                            id="image_{{ $item->id }}" accept="image/*">
-                                                        @if ($item->image && file_exists(public_path('storage/' . $item->image)))
-                                                            <div class="mt-2">
-                                                                <small class="text-muted">Gambar saat ini:</small><br>
-                                                                <img src="{{ asset('storage/' . $item->image) }}"
-                                                                    alt="Preview Gambar" style="max-height: 150px;"
-                                                                    class="rounded shadow-sm mt-1">
+                                                    <div class="row g-3">
+                                                        {{-- Nama --}}
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-semibold">Nama</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i
+                                                                        class="fas fa-user"></i></span>
+                                                                <input type="text" name="nama" class="form-control"
+                                                                    value="{{ $item->nama }}" required>
                                                             </div>
-                                                        @endif
-                                                    </div>
-                                                </div>
+                                                        </div>
 
+                                                        {{-- NIP --}}
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-semibold">NIP</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i
+                                                                        class="fas fa-id-card"></i></span>
+                                                                <input type="text" name="nip" class="form-control"
+                                                                    value="{{ $item->nip }}">
+                                                            </div>
+                                                        </div>
+
+                                                        {{-- Email --}}
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-semibold">Email</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i
+                                                                        class="fas fa-envelope"></i></span>
+                                                                <input type="email" name="email" class="form-control"
+                                                                    value="{{ $item->email }}" required>
+                                                            </div>
+                                                        </div>
+
+                                                        {{-- No HP --}}
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-semibold">No HP</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i
+                                                                        class="fas fa-phone"></i></span>
+                                                                <input type="text" name="no_hp" class="form-control"
+                                                                    value="{{ $item->no_hp }}">
+                                                            </div>
+                                                        </div>
+
+                                                        {{-- Alamat --}}
+                                                        <div class="col-md-12">
+                                                            <label for="alamat"
+                                                                class="form-label fw-semibold">Alamat</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i
+                                                                        class="fas fa-map-marker-alt"></i></span>
+                                                                <textarea class="form-control" name="alamat" id="alamat" rows="4"
+                                                                    placeholder="Masukkan alamat (optional)">{{ $item->alamat }}</textarea>
+                                                            </div>
+                                                        </div>
+
+
+
+                                                        {{-- Jenis Kelamin --}}
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-semibold">Jenis Kelamin</label>
+                                                            <select name="jenis_kelamin" class="form-select" required>
+                                                                <option value="L"
+                                                                    {{ $item->jenis_kelamin == 'L' ? 'selected' : '' }}>
+                                                                    Laki-laki</option>
+                                                                <option value="P"
+                                                                    {{ $item->jenis_kelamin == 'P' ? 'selected' : '' }}>
+                                                                    Perempuan</option>
+                                                            </select>
+                                                        </div>
+
+                                                        {{-- Tanggal Lahir --}}
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-semibold">Tanggal Lahir</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i
+                                                                        class="fas fa-calendar-alt"></i></span>
+                                                                <input type="date" name="tanggal_lahir"
+                                                                    class="form-control"
+                                                                    value="{{ $item->tanggal_lahir }}">
+                                                            </div>
+                                                        </div>
+
+                                                        {{-- Tempat Lahir --}}
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-semibold">Tempat Lahir</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i
+                                                                        class="fas fa-map-pin"></i></span>
+                                                                <input type="text" name="tempat_lahir"
+                                                                    class="form-control"
+                                                                    value="{{ $item->tempat_lahir }}">
+                                                            </div>
+                                                        </div>
+
+                                                        {{-- Kategori Kelas --}}
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-semibold">Kategori Kelas</label>
+                                                            <select name="kategoriKelas_id" class="form-select" required>
+                                                                <option value="" disabled>-- Pilih Kategori --
+                                                                </option>
+                                                                @foreach ($kategori as $kat)
+                                                                    <option value="{{ $kat->id }}"
+                                                                        {{ $item->kategoriKelas_id == $kat->id ? 'selected' : '' }}>
+                                                                        {{ $kat->nama_kategori }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+
+                                                        {{-- Kelas --}}
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-semibold">Kelas</label>
+                                                            <select name="kelas_id" class="form-select" required>
+                                                                <option value="" disabled>-- Pilih Kelas --</option>
+                                                                @foreach ($kelas as $k)
+                                                                    <option value="{{ $k->id }}"
+                                                                        {{ $item->kelas_id == $k->id ? 'selected' : '' }}>
+                                                                        {{ $k->nama_kelas }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+
+                                                        {{-- Upload Gambar --}}
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-semibold">Upload Gambar</label>
+                                                            <input class="form-control" type="file" name="image"
+                                                                accept="image/*">
+                                                            @if ($item->image && file_exists(public_path('storage/' . $item->image)))
+                                                                <div class="mt-2">
+                                                                    <small class="text-muted">Gambar saat ini:</small><br>
+                                                                    <img src="{{ asset('storage/' . $item->image) }}"
+                                                                        alt="Preview Gambar"
+                                                                        class="rounded shadow-sm mt-1"
+                                                                        style="max-height: 150px;">
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div> {{-- row --}}
+                                                </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Batal</button>
-                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                    <button type="button" class="btn btn-secondary btn-round"
+                                                        data-bs-dismiss="modal">
+                                                        <i class="fas fa-times me-1"></i> Batal
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary btn-round">
+                                                        <i class="fas fa-save me-1"></i> Update
+                                                    </button>
                                                 </div>
                                             </div>
                                         </form>
@@ -287,7 +408,7 @@
         </div>
     </div>
 
-     @include('guru.create', ['kategori' => $kategori])
+    @include('guru.create', ['kategori' => $kategori])
 
     @if (session('sweetalert'))
         <script>
@@ -325,4 +446,13 @@
         })
     }
 </script>
-
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        ClassicEditor
+            .create(document.querySelector('#alamat'))
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script>
