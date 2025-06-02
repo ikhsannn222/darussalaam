@@ -56,15 +56,16 @@
                                                 </li>
                                                 <li>
                                                     <button class="dropdown-item text-danger"
-                                                        onclick="confirmDelete({{ $item->id }})">
+                                                        onclick="confirmDelete('delete-form-{{ $item->id }}')">
                                                         <i class="fas fa-trash-alt me-1"></i> Hapus
                                                     </button>
                                                     <form id="delete-form-{{ $item->id }}"
                                                         action="{{ route('guru.destroy', $item->id) }}" method="POST"
-                                                        class="d-none">
+                                                        style="display: none;">
                                                         @csrf
                                                         @method('DELETE')
                                                     </form>
+
                                                 </li>
                                             </ul>
                                         </div>
@@ -297,13 +298,11 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i
                                                                         class="fas fa-map-marker-alt"></i></span>
-                                                                <textarea class="form-control" name="alamat" id="alamat" rows="4"
+                                                                <textarea class="form-control" name="alamat" id="alamat-{{ $item->id }}" rows="4"
                                                                     placeholder="Masukkan alamat (optional)">{{ $item->alamat }}</textarea>
+
                                                             </div>
                                                         </div>
-
-
-
                                                         {{-- Jenis Kelamin --}}
                                                         <div class="col-md-6">
                                                             <label class="form-label fw-semibold">Jenis Kelamin</label>
@@ -446,13 +445,25 @@
         })
     }
 </script>
-<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        ClassicEditor
-            .create(document.querySelector('#alamat'))
-            .catch(error => {
-                console.error(error);
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('[id^="editModal-"]').forEach(function (modal) {
+            modal.addEventListener('shown.bs.modal', function () {
+                const idGuru = this.id.replace('editModal-', '');
+                const textarea = document.querySelector(`#alamat-${idGuru}`);
+
+                // Cek apakah sudah diinisialisasi editor
+                if (textarea && !textarea.dataset.editorInitialized) {
+                    ClassicEditor
+                        .create(textarea)
+                        .then(editor => {
+                            textarea.dataset.editorInitialized = 'true';
+                        })
+                        .catch(error => console.error(error));
+                }
             });
+        });
     });
 </script>
+
+
