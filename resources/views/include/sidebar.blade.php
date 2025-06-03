@@ -48,6 +48,14 @@
                     </a>
                 </li>
 
+                <li class="nav-item {{ request()->routeIs('guru.*') ? 'active' : '' }}">
+                    <a href="{{ route('mapel.index') }}">
+                        <i class="fas fa-book"></i>
+                        <span>Mata Pelajaran</span>
+                    </a>
+                </li>
+
+
             </ul>
         </div>
     </div>

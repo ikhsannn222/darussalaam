@@ -16,7 +16,7 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Nama Guru</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <span class="input-group-text"> <i class="fas fa-user-tie"></i></span>
                                 <input type="text" class="form-control" name="nama" placeholder="Masukkan nama guru"
                                     value="{{ old('nama') }}" required>
                             </div>

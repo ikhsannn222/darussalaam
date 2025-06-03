@@ -35,9 +35,9 @@ class Guru extends Model
         return $this->belongsTo(Kelas::class, 'kelas_id');
     }
 
-    public function guruKelas()
+    public function mapels()
     {
-        return $this->hasMany(GuruKelas::class);
+        return $this->hasMany(Mapel::class);
     }
 
 }

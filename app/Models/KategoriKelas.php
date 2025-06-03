@@ -22,4 +22,9 @@ class KategoriKelas extends Model
     {
         return $this->hasMany(Guru::class, 'kategoriKelas_id');
     }
+
+     public function mapels()
+    {
+        return $this->hasMany(Mapel::class, 'kategoriKelas_id');
+    }
 }

@@ -24,6 +24,11 @@ class Kelas extends Model
 
     public function guru()
     {
-        return $this->hasMany(Guru::class, 'kelas');
+        return $this->hasMany(Guru::class, 'kelas_id');
+    }
+
+     public function mapels()
+    {
+        return $this->hasMany(Mapel::class, 'kelas_id');
     }
 }
