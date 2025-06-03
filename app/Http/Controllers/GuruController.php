@@ -28,7 +28,7 @@ class GuruController extends Controller
     {
         $request->validate([
             'nama'             => 'required|string|max:255',
-            'nip'              => 'nullable|string|unique:guru,nip',
+            'nip'              => $request->nip ? 'nullable|string|unique:guru,nip' : 'nullable|string',
             'email'            => 'required|email|unique:guru,email',
             'no_hp'            => 'nullable|string|max:20',
             'alamat'           => 'nullable|string',
