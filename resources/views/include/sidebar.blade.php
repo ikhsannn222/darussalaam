@@ -48,10 +48,17 @@
                     </a>
                 </li>
 
-                <li class="nav-item {{ request()->routeIs('guru.*') ? 'active' : '' }}">
+                <li class="nav-item {{ request()->routeIs('.*') ? 'active' : '' }}">
                     <a href="{{ route('mapel.index') }}">
                         <i class="fas fa-book"></i>
                         <span>Mata Pelajaran</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('galeri.*') ? 'active' : '' }}">
+                    <a href="{{ route('galeri.index') }}">
+                        <i class="fas fa-book"></i>
+                        <span>Galeri</span>
                     </a>
                 </li>
 

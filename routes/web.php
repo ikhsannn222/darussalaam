@@ -5,6 +5,7 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\KategoriKelasController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MapelController;
+use App\Http\Controllers\GaleriController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -27,8 +28,10 @@ Route::middleware('auth')->group(function () {
 
     // mapel
     Route::resource('mapel', MapelController::class);
-     Route::get('/mapel/create', [MapelController::class, 'create'])->name('mapel.create');
+    Route::get('/mapel/create', [MapelController::class, 'create'])->name('mapel.create');
 
+    // galeri
+    Route::resource('galeri', GaleriController::class);
 
 });
 
